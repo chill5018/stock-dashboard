@@ -1,0 +1,42 @@
+body {
+  color: black;
+  padding: 20px;
+  background-color: #c9c9c9;
+}
+
+.ch-page-header {
+  color: black;
+  font-size: 2.8rem;
+  font-weight: 500;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.panel-heading-green {
+  background-color: #47ef74;
+}
+
+.panel-heading-red {
+  background-color: #ef4747;
+}
+
+.ch-stock-overview {
+  margin-top: 50px;
+}
+
+.ch-panel-body-offers {
+  max-height: 200px;
+  overflow: scroll;
+}
+
+.ch-panel-body-portfolio {
+  max-height: 200px;
+  /*overflow: scroll;*/
+}
+
+.ch-panel-body-account {
+  padding-top: 30px;
+  height: 200px;
+  /*background-color:  #5673ff;*/
+}

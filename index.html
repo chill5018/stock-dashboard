@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body id="dashboard">
+  <div class="ch-page-header">
+    Stock Overview
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          My Account
+        </div>
+        <div class="panel-body ch-panel-body-account">
+          <div id="myCurrency">Name: </div>
+          <div id="myAmount">Amount: </div>
+          <div id="myExchange"></div>
+          <div class="lastUpdated">Last Updated: </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Portfolio
+        </div>
+        <div class="panel-body ch-panel-body-portfolio">
+          <div class="lastUpdated">Last Updated: </div>
+          <div class="ch-chart__net-worth" id="net-worth-donut" style="height: 215px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Current Offers
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body ch-panel-body-offers">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Stock</th>
+                  <th>% Change</th>
+                  <th>Stock Price</th>
+                </tr>
+              </thead>
+              <tbody id="currentOffers">
+                <!-- See Main.JS for Table Rows -->
+              </tbody>
+            </table>
+          </div><!-- /.table-responsive -->
+        </div><!-- /.panel-body -->
+      </div><!-- /.panel -->
+    </div><!-- /.col-lg-6 -->
+  </div>
+  <div class="row ch-admin-panel">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Admin Panel
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <select class="selectpicker">
+                <option value="view">View Offers</option>
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+                <option value="exchange">Exchange</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <input type="text" id="currency-amount" name="name" placeholder="Some Value"value=""></input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Exchange
+      </div>
+      <div class="panel-body">
+        <form class="currencyExchangeForm" method="GET">
+          <div class="conversionLabel"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <input id="currencyFrom" type="text" name="currency1" placeholder="From"value=""></input>
+            </div>
+            <div class="col-sm-4">
+              <input id="currencyTo" type="text" name="currency2" placeholder="To" value=""></input>
+            </div>
+          </div>
+          <button class="btn btn-success" onClick="performAction(exchange, currency1, currency2)" name="submitButton">Convert</button>
+        </form>
+        <div class="lastUpdated">Last Updated: </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+  <script src="./vendors/knockout/knockout.js" charset="utf-8"></script>
+  <script src="./vendors/moment/moment.js" charset="utf-8"></script>
+  <script src="js/main.js" charset="utf-8"></script>
+</body>
+</html>
