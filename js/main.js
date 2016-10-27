@@ -17,8 +17,7 @@ $(document).ready(function() {
 
   //Send the AJAX call to the server
 
-  function getLatestOffers() {
-    //your jQuery ajax code
+  setInterval(function() {
     $.ajax({
       //The URL to process the request
       'url': 'http://52.57.228.6//man2API/php/BankPhp.php',
@@ -48,28 +47,17 @@ $(document).ready(function() {
           // graphPoint.label = currencyJS;
           // graphPoint.value = amountJS;
           // graphData.push(graphPoint);
-          $('#currentOffers').append("<tr><td>"+idJS+"</td><td>"+currencyJS+"</td><td>-0.11</td><td >"+amountJS+"</td></tr>");
+          $('#currentOffers').append("<tr><td>"+idJS+"</td><td>"+currencyJS+"</td><td >"+amountJS+"</td></tr>");
         }
 
         // console.log(graphData);
         $('.lastUpdated').text('Last Updated: '+moment().toString());
-
-        // // console.log(day +" "+ temp);
-        // var weatherChart = new Morris.Donut({
-        //   // ID of the element in which to draw the chart.
-        //   element: 'net-worth-donut',
-        //   // Chart data records -- each entry in this array corresponds to a point on
-        //   // the chart.
-        //   data: graphData,
-        //
-        // });
       }
     });
-  }
+  },1000*30);
 
   var interval = 1000 * 60 * 1; // where X is your every X minutes
 
-  setInterval(getLatestOffers(), interval);
 
   setInterval(performAnAction(action_accountInfo, username), interval);
 
