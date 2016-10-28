@@ -13,6 +13,29 @@
     Stock Overview
   </div>
 
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Current Offers
+        <div class="fl-right lastUpdated">Last Updated: </div>
+      </div>
+      <div class="panel-body ch-panel-body-portfolio">
+        <div class="ch-chart__net-worth" id="offersChart" style="height: 215px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Exchange Rates vs Available Offers
+        <div class="fl-right lastUpdated">Last Updated: </div>
+      </div>
+      <div class="panel-body ch-panel-body-portfolio">
+        <div class="ch-chart__net-worth" id="conversionChart" style="height: 215px;"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-4">
       <div class="panel panel-default">
@@ -35,7 +58,7 @@
         </div>
         <div class="panel-body ch-panel-body-portfolio">
           <div class="lastUpdated">Last Updated: </div>
-          <div class="ch-chart__net-worth" id="net-worth-donut" style="height: 215px;"></div>
+          <div class="ch-chart__net-worth" id="offersDonut" style="height: 215px;"></div>
         </div>
       </div>
     </div>
@@ -75,40 +98,52 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-4">
-              <select class="selectpicker">
-                <option value="view">View Offers</option>
+              <select class="selectpicker" id="stockAction">
+                <option selected>Please select an action:</option>
                 <option value="buy">Buy</option>
                 <option value="sell">Sell</option>
-                <option value="exchange">Exchange</option>
               </select>
             </div>
             <div class="col-sm-4">
-              <input type="text" id="currency-amount" name="name" placeholder="Some Value"value=""></input>
+              <div class="ch-fields-buy" style="display: none;">
+                <input type="text" id="transaction-id" name="name" placeholder="Id"value=""></input>
+              </div>
+              <div class="ch-fields-sell" style="display: none;">
+                <input type="text" id="currency-amount" name="name" placeholder="Amount"value=""></input>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="ch-fields-buy" style="display: none;">
+                <button class="btn btn-danger stockActionBuyButton" type="button" name="button">Complete Order</button>
+              </div>
+              <div class="ch-fields-sell" style="display: none;">
+                <button class="btn btn-success stockActionSellButton" type="button" name="button">Complete Order</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
         Exchange
       </div>
       <div class="panel-body">
-        <form class="currencyExchangeForm" method="GET">
+        <!-- <form class="currencyExchangeForm" action=""> -->
           <div class="conversionLabel"></div>
 
           <div class="row">
             <div class="col-sm-4">
-              <input id="currencyFrom" type="text" name="currency1" placeholder="From"value=""></input>
+              <input id="currencyFrom" type="text" name="from" placeholder="From" value=""></input>
             </div>
             <div class="col-sm-4">
-              <input id="currencyTo" type="text" name="currency2" placeholder="To" value=""></input>
+              <input id="currencyTo" type="text" name="to" placeholder="To" value=""></input>
             </div>
           </div>
-          <button class="btn btn-success" onClick="performAction(exchange, currency1, currency2)" name="submitButton">Convert</button>
-        </form>
+          <button class="btn btn-success convertButton" type="button" name="submitButton">Convert</button>
+        <!-- </form> -->
         <div class="lastUpdated">Last Updated: </div>
       </div>
     </div>

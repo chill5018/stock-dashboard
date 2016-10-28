@@ -1,67 +1,31 @@
-
 $(document).ready(function() {
   var apiKey = '06a3f86266a91a6c57153e802d9eec04'; // Constant
   var username = 'COLI0107';                       // Constant
-  var action_accountInfo = 'account_info';         // Action Type
-  var action_offers = 'offers';                    // Action type
-  var action_buy = 'buy';                          // Action Type
-  var action_sell = 'sell';                        // Action Type
-  var action_exchangeRate = 'exchange_rate'        // Action Type
 
-  // var transaction_id = document.getElementById("transactionId");
-  var transaction_id = ''; // get from input field
-  var qtyStocks = ''; // get from input field
-
-  var currency1 = 'ANDR705V'
-  var currency2 = 'COLI0107'
+  var action_accountInfo = 'account_info';         // Action Types
+  var action_offers = 'offers';                    // Action types
+  var action_buy = 'buy';                          // Action Types
+  var action_sell = 'sell';                        // Action Types
+  var action_exchangeRate = 'exchange_rate'        // Action Types
+  var action_conversionChart = 'exchange_rate'     // Action Types
 
   //Send the AJAX call to the server
-
-  setInterval(function() {
-    $.ajax({
-      //The URL to process the request
-      'url': 'http://52.57.228.6//man2API/php/BankPhp.php',
-      //The type of request, also known as the "method" in HTML forms
-      //Can be 'GET' or 'POST'
-      'type': 'GET',
-      //Any post-data/get-data parameters
-      //This is optional
-      'data': {
-        'what': action_offers,
-        'apikey': apiKey
-      },
-      //The response from the server
-      'success': function (dataString) {//You can use any jQuery/JavaScript here!!!
-        console.log(dataString);
-
-        var data = JSON.parse(dataString)
-        // console.log(data);
-
-        // var graphData = [];
-        for (var i = 0; i < data.data.length; i++) {
-          var idJS = data.data[i].id;
-          var amountJS = data.data[i].amount;
-          var currencyJS = data.data[i].currency;
-
-          // var graphPoint = {};
-          // graphPoint.label = currencyJS;
-          // graphPoint.value = amountJS;
-          // graphData.push(graphPoint);
-          $('#currentOffers').append("<tr><td>"+idJS+"</td><td>"+currencyJS+"</td><td >"+amountJS+"</td></tr>");
-        }
-
-        // console.log(graphData);
-        $('.lastUpdated').text('Last Updated: '+moment().toString());
-      }
-    });
-  },1000*30);
-
   var interval = 1000 * 60 * 1; // where X is your every X minutes
 
+  var uniqueOfferers = [];
 
-  setInterval(performAnAction(action_accountInfo, username), interval);
+  // Initial Call to populate the screen
+  performAnAction(action_accountInfo);
+  performAnAction(action_offers);
+
+  // Refresh Data every minute
+  setInterval(function() {
+    performAnAction(action_accountInfo),
+    performAnAction(action_offers)
+  }, interval);
 
 
+  // Generic Function to perform all of the necessary AJAX Calls
   function performAnAction(action, currency1, currency2, qtyStocks, transaction_id, username) {
     $.ajax({
       //The URL to process the request
@@ -81,79 +45,148 @@ $(document).ready(function() {
         'apikey': apiKey
       },
       //The response from the server
-      'success': function (dataString) {//You can use any jQuery/JavaScript here!!!
+      'success': function (dataString) {
+        //You can use any jQuery/JavaScript here!!!
         console.log(dataString);
 
         var data = JSON.parse(dataString)
         console.log(data);
 
-        var graphData = [];
-        for (var i = 0; i < data.data.length; i++) {
-          var amountJS = data.data[i].amount;
-          var currencyJS = data.data[i].currency;
-
-          var graphPoint = {};
-
-          graphPoint.label = currencyJS;
-          graphPoint.value = amountJS;
-
-          graphData.push(graphPoint);
+        // Switch to handle how data is
+        // displayed for each call
+        switch (action) {
+          case action_offers:
+            currentOffers(data);
+            break;
+          case action_accountInfo:
+            accountInfo(data);
+            break;
+          case action_exchangeRate:
+            exchangeRate(data);
+            break;
+          case action_conversionChart:
+            calculateConversionRates(data);
+            break;
+          case action_buy:
+            // Show some sort of confirmation?
+            console.log(data);
+            break;
+          case action_sell:
+            // Show some sort of confirmation?
+            console.log(data);
+            break;
+          default:
+            throw new "Action Type unknown... Check your call to performAnAction()";
         }
-
-        console.log(graphData);
-
-        // Do something with the data
-        $('#myAmount').append(data.data[0].amount);
-        $('.conversionLabel').append(data.data[0].amount);
-        $('#myCurrency').append(data.data[0].currency);
-        $('.lastUpdated').text('Last Updated: '+moment().toString());
-
-
-
-
       }
     });
   }
+
+  // Dropdown menu toggle input fields
+  $('#stockAction').on('change',function(){
+    if($(this).val()==="buy"){
+      $(".ch-fields-buy").show();
+      $(".ch-fields-sell").hide();
+    } else {
+      $(".ch-fields-buy").hide();
+      $(".ch-fields-sell").show();
+    }
+  });
+
+  // Button Click Functions
+  $('.stockActionBuyButton').click(function () {
+      var id = $('#transaction-id').val();
+      performAnAction(action_buy, null, null, null, parseInt(id));
+      refreshView();
+  });
+
+  $('.stockActionSellButton').click(function () {
+      var amount = $('#currency-amount').val();
+      // performAnAction(action_sell, parseInt(amount));
+      performAnAction(action_sell,null, null, parseFloat(amount));
+      refreshView();
+  });
+
+  $('.convertButton').click(function () {
+      var c1 = $('#currencyFrom').val();
+      var c2 = $('#currencyTo').val();
+
+      performAnAction(action_exchangeRate, c1, c2);
+  });
+
+  var offersChart = new Morris.Bar ({
+    element: 'offersChart',
+    data: [],
+    xkey: 'label',
+    ykeys: ['value'],
+    labels: ['Value'],
+    resize: true,
+
+  });
+
+  var conversionChart = new Morris.Bar ({
+    element: 'conversionChart',
+    data: [],
+    xkey: 'label',
+    ykeys: ['value'],
+    labels: ['Value'],
+    resize: true,
+
+  });
+
+  // Functions to Display various Data
+  function currentOffers(data) {
+    $('#currentOffers').text('');
+    var graphData = [];
+    for (var i = 0; i < data.data.length; i++) {
+      var idJS = data.data[i].id;
+      var amountJS = data.data[i].amount;
+      var currencyJS = data.data[i].currency;
+
+      graphPoint = {};
+      graphPoint.label = currencyJS;
+      graphPoint.value = amountJS;
+      graphData.push(graphPoint);
+
+      // Filter so only unique names are passed through
+      performAnAction(action_conversionChart, username, currencyJS)
+
+      $('#currentOffers').append("<tr><td>"+idJS+"</td><td>"+currencyJS+"</td><td >"+amountJS+"</td></tr>");
+    }
+
+    offersChart.setData(graphData);
+    $('.lastUpdated').text('Last Updated: '+moment().format('MMMM DD YYYY HH:mm:ss'));
+  }
+
+  function accountInfo(data) {
+    $('#myAmount').text('Name: '+data.data[0].amount);
+    $('#myCurrency').text('Amount: '+data.data[0].currency);
+    $('.lastUpdated').text('Last Updated: '+moment().toString());
+  }
+
+  // Used in Conversion Widget
+  function exchangeRate(data) {
+    $('.conversionLabel').text(data.data.amount);
+
+  }
+
+  // Used for Exchange Rate Graph
+  function calculateConversionRates(data) {
+    var graphData = [];
+    graphPoint = {};
+    graphPoint.label = data.data.to;
+    graphPoint.value = data.data.amount;
+    graphData.push(graphPoint);
+
+    conversionChart.setData(graphData);
+    $('.lastUpdated').text('Last Updated: '+moment().format('MMMM DD YYYY HH:mm:ss'));
+
+  }
+
+  function refreshView() {
+    //Refresh the view after some action
+    performAnAction(action_offers);
+    performAnAction(action_accountInfo);
+  }
+
 })
-
-// new Morris.Line({
-//   // ID of the element in which to draw the chart.
-//   element: 'myfirstchart',
-//   // Chart data records -- each entry in this array corresponds to a point on
-//   // the chart.
-//   data: [
-//     { year: '2008', value: 20 },
-//     { year: '2009', value: 10 },
-//     { year: '2010', value: 5 },
-//     { year: '2011', value: 5 },
-//     { year: '2012', value: 20 }
-//   ],
-//   // The name of the data record attribute that contains x-values.
-//   xkey: 'year',
-//   // A list of names of data record attributes that contain y-values.
-//   ykeys: ['value'],
-//   // Labels for the ykeys -- will be displayed when you hover over the
-//   // chart.
-//   labels: ['Value']
-// });
-
-// new Morris.Area({
-//   // ID of the element in which to draw the chart.
-//   element: 'net-worth',
-//   // Chart data records -- each entry in this array corresponds to a point on
-//   // the chart.
-//   data: [
-//     { day: '2016-10-21', value: 5 },
-//     { day: '2016-10-22', value: 10 },
-//     { day: '2016-10-23', value: 7 },
-//     { day: '2016-10-24', value: 9 },
-//     { day: '2016-10-25', value: 12 }
-//   ],
-//   // The name of the data record attribute that contains x-values.
-//   xkey: 'day',
-//   // A list of names of data record attributes that contain y-values.
-//   ykeys: ['value'],
-//   // Labels for the ykeys -- will be displayed when you hover over the
-//   // chart.
-//   labels: ['Value']
-// })
