@@ -1,7 +1,7 @@
 body {
-  color: black;
+  color: #86a4ff;
   padding: 20px;
-  background-color: #c9c9c9;
+  background-color: #02010a;
 }
 
 input {
@@ -15,7 +15,6 @@ input {
 }
 
 .ch-page-header {
-  color: black;
   font-size: 2.8rem;
   font-weight: 500;
   margin-top: 10px;
@@ -41,8 +40,26 @@ input {
 }
 
 .ch-panel-body-portfolio {
-  max-height: 200px;
+  max-height: 250px;
   /*overflow: scroll;*/
+}
+
+.transaction-id-label, .currency-amount-text {
+  display: inline;
+  text-align: center;
+}
+
+.stockActionSellButton, .stockActionBuyButton {
+  margin-top: 10px
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: #404040;
+}
+
+.panel-body {
+  text-align: center;
+  background-color: #272727;
 }
 
 .ch-panel-body-account {
@@ -59,4 +76,14 @@ input {
   margin-top: 10px;
   font-size: 1.2rem;
   color: #757575;
+}
+
+.account-action-panel {
+  height: 240px;
+  text-align: center;
+  background-color: #272727;
+}
+
+.panel {
+  border: none;
 }

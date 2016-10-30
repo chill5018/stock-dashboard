@@ -24,7 +24,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12">
+
+  <div class="col-md-12" style="display:none;"> <!-- in progrss -->
     <div class="panel panel-default">
       <div class="panel-heading">
         Exchange Rates vs Available Offers
@@ -38,125 +39,136 @@
 
   <div class="row">
     <div class="col-md-4">
-      <div class="panel panel-default">
+      <div class="panel panel-default account-action-panel"> <!-- parent panel -->
         <div class="panel-heading">
-          My Account
+          <h4 class="panel-title">
+            Account Actions
+          </h4>
         </div>
-        <div class="panel-body ch-panel-body-account">
-          <div id="myCurrency">Name: </div>
-          <div id="myAmount">Amount: </div>
-          <div id="myExchange"></div>
-          <div class="lastUpdated">Last Updated: </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Portfolio
-        </div>
-        <div class="panel-body ch-panel-body-portfolio">
-          <div class="lastUpdated">Last Updated: </div>
-          <div class="ch-chart__net-worth" id="offersDonut" style="height: 215px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Current Offers
-        </div>
-        <!-- /.panel-heading -->
-        <div class="panel-body ch-panel-body-offers">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>id</th>
-                  <th>Stock</th>
-                  <th>Stock Price</th>
-                </tr>
-              </thead>
-              <tbody id="currentOffers">
-                <!-- See Main.JS for Table Rows -->
-              </tbody>
-            </table>
-          </div><!-- /.table-responsive -->
-        </div><!-- /.panel-body -->
-      </div><!-- /.panel -->
-    </div><!-- /.col-lg-6 -->
-  </div>
-  <div class="row ch-admin-panel">
-    <div class="col-sm-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Admin Panel
-        </div>
-
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-4">
-              <select class="selectpicker" id="stockAction">
-                <option selected>Please select an action:</option>
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-              </select>
-            </div>
-            <div class="col-sm-4">
-              <div class="ch-fields-buy" style="display: none;">
-                <input type="text" id="transaction-id" name="name" placeholder="Id"value=""></input>
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading panel-heading-green">
+              <h4 class="panel-title">
+                <span class="glyphicon glyphicon-usd"></span>
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                  Buy</a>
+                </h4>
               </div>
-              <div class="ch-fields-sell" style="display: none;">
-                <input type="text" id="currency-amount" name="name" placeholder="Amount"value=""></input>
+              <div id="collapse1" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="row transaction-row">
+                    <div class="transaction-id-label">
+                      Transaction Id:
+                    </div>
+                    <input type="text" id="transaction-id" name="name" placeholder="Id"value=""></input>
+                  </div>
+                  <div class="row">
+                    <button class="btn btn-danger stockActionBuyButton" type="button" name="button">Complete Order</button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-sm-4">
-              <div class="ch-fields-buy" style="display: none;">
-                <button class="btn btn-danger stockActionBuyButton" type="button" name="button">Complete Order</button>
+            <div class="panel panel-default">
+              <div class="panel-heading panel-heading-red">
+                <h4 class="panel-title">
+                  <span class="glyphicon glyphicon-send"></span>
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                    Sell</a>
+                  </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="currency-amount-text">
+                        Amount to sell:
+                      </div>
+                      <input type="text" id="currency-amount" name="name" placeholder="Amount"></input>
+                    </div>
+                    <div class="row">
+                      <button class="btn btn-success stockActionSellButton" type="button" name="button">Complete Order</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="ch-fields-sell" style="display: none;">
-                <button class="btn btn-success stockActionSellButton" type="button" name="button">Complete Order</button>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                      Exchange</a>
+                    </h4>
+                  </div>
+                  <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <div class="conversionLabel"></div>
+                      <div class="row">
+                          <input id="currencyFrom" type="text" name="from" placeholder="From" data-bind="text: currencyFrom"></input>
+                          <input id="currencyTo" type="text" name="to" placeholder="To" data-bind="text: currencyTo"></input>
+                      </div>
+                      <div class="row">
+                        <button class="btn btn-success convertButton" type="button" name="submitButton" data-bind="click: calculateExchangeRate">Convert</button>
+                      </div>
+                      <div class="lastUpdated">Last Updated: </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        Exchange
-      </div>
-      <div class="panel-body">
-        <!-- <form class="currencyExchangeForm" action=""> -->
-          <div class="conversionLabel"></div>
-
-          <div class="row">
-            <div class="col-sm-4">
-              <input id="currencyFrom" type="text" name="from" placeholder="From" value=""></input>
-            </div>
-            <div class="col-sm-4">
-              <input id="currencyTo" type="text" name="to" placeholder="To" value=""></input>
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                My Account
+              </div>
+              <div class="panel-body ch-panel-body-account">
+                <div class="col-md-12">
+                  <div id="myCurrency">Name: </div>
+                  <div id="myAmount">Amount: </div>
+                  <div id="myExchange"></div>
+                  <div class="lastUpdated">Last Updated: </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="ch-chart__net-worth" id="portfolioValue" style="height: 215px;"></div>
+                </div>
+              </div>
             </div>
           </div>
-          <button class="btn btn-success convertButton" type="button" name="submitButton">Convert</button>
-        <!-- </form> -->
-        <div class="lastUpdated">Last Updated: </div>
-      </div>
-    </div>
-  </div>
+
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                Current Offers
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body ch-panel-body-offers">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>Stock</th>
+                        <th>Stock Price</th>
+                      </tr>
+                    </thead>
+                    <tbody id="currentOffers">
+                      <!-- See Main.JS for Table Rows -->
+                    </tbody>
+                  </table>
+                </div><!-- /.table-responsive -->
+              </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+          </div><!-- /.col-lg-6 -->
+        </div>
 
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-  <script src="./vendors/knockout/knockout.js" charset="utf-8"></script>
-  <script src="./vendors/moment/moment.js" charset="utf-8"></script>
-  <script src="js/main.js" charset="utf-8"></script>
-</body>
-</html>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+        <script src="./vendors/knockout/knockout.js" charset="utf-8"></script>
+        <script src="./vendors/moment/moment.js" charset="utf-8"></script>
+        <script src="js/main.js" charset="utf-8"></script>
+        <script src="js/view-models/dashboard.js" charset="utf-8"></script>
+      </body>
+      </html>

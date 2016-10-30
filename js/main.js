@@ -12,7 +12,11 @@ $(document).ready(function() {
   //Send the AJAX call to the server
   var interval = 1000 * 60 * 1; // where X is your every X minutes
 
+  // Global Lists
   var uniqueOfferers = [];
+  var exchangeRates = [];
+
+  var currentValue;
 
   // Initial Call to populate the screen
   performAnAction(action_accountInfo);
@@ -47,10 +51,10 @@ $(document).ready(function() {
       //The response from the server
       'success': function (dataString) {
         //You can use any jQuery/JavaScript here!!!
-        console.log(dataString);
+        // console.log(dataString);
 
         var data = JSON.parse(dataString)
-        console.log(data);
+        // console.log(data);
 
         // Switch to handle how data is
         // displayed for each call
@@ -69,11 +73,11 @@ $(document).ready(function() {
             break;
           case action_buy:
             // Show some sort of confirmation?
-            console.log(data);
+            console.log('You completed a purchase');
             break;
           case action_sell:
             // Show some sort of confirmation?
-            console.log(data);
+            console.log('You completed an offer');
             break;
           default:
             throw new "Action Type unknown... Check your call to performAnAction()";
@@ -82,22 +86,12 @@ $(document).ready(function() {
     });
   }
 
-  // Dropdown menu toggle input fields
-  $('#stockAction').on('change',function(){
-    if($(this).val()==="buy"){
-      $(".ch-fields-buy").show();
-      $(".ch-fields-sell").hide();
-    } else {
-      $(".ch-fields-buy").hide();
-      $(".ch-fields-sell").show();
-    }
-  });
-
   // Button Click Functions
   $('.stockActionBuyButton').click(function () {
       var id = $('#transaction-id').val();
       performAnAction(action_buy, null, null, null, parseInt(id));
       refreshView();
+      id.value = "34";
   });
 
   $('.stockActionSellButton').click(function () {
@@ -105,6 +99,7 @@ $(document).ready(function() {
       // performAnAction(action_sell, parseInt(amount));
       performAnAction(action_sell,null, null, parseFloat(amount));
       refreshView();
+      amount.value = '';
   });
 
   $('.convertButton').click(function () {
@@ -121,6 +116,7 @@ $(document).ready(function() {
     ykeys: ['value'],
     labels: ['Value'],
     resize: true,
+    barColors: 'red',
 
   });
 
@@ -130,6 +126,13 @@ $(document).ready(function() {
     xkey: 'label',
     ykeys: ['value'],
     labels: ['Value'],
+    resize: true,
+
+  });
+
+  var portfolioValue = new Morris.Donut ({
+    element: 'portfolioValue',
+    data: [{label: 'COLI0107', value: currentValue}],
     resize: true,
 
   });
@@ -148,17 +151,22 @@ $(document).ready(function() {
       graphPoint.value = amountJS;
       graphData.push(graphPoint);
 
-      // Filter so only unique names are passed through
-      performAnAction(action_conversionChart, username, currencyJS)
+      // Add all users to the list
+      // uniqueOfferers.push(currencyJS);
 
       $('#currentOffers').append("<tr><td>"+idJS+"</td><td>"+currencyJS+"</td><td >"+amountJS+"</td></tr>");
     }
+
+    // Filter duplicate currencies
+    // uniqueOfferers.removeDuplicates();
 
     offersChart.setData(graphData);
     $('.lastUpdated').text('Last Updated: '+moment().format('MMMM DD YYYY HH:mm:ss'));
   }
 
+  // Shows data in account info panel
   function accountInfo(data) {
+    currentValue = data.data[0].amount
     $('#myAmount').text('Name: '+data.data[0].amount);
     $('#myCurrency').text('Amount: '+data.data[0].currency);
     $('.lastUpdated').text('Last Updated: '+moment().toString());
@@ -167,20 +175,11 @@ $(document).ready(function() {
   // Used in Conversion Widget
   function exchangeRate(data) {
     $('.conversionLabel').text(data.data.amount);
-
   }
 
   // Used for Exchange Rate Graph
   function calculateConversionRates(data) {
-    var graphData = [];
-    graphPoint = {};
-    graphPoint.label = data.data.to;
-    graphPoint.value = data.data.amount;
-    graphData.push(graphPoint);
-
-    conversionChart.setData(graphData);
-    $('.lastUpdated').text('Last Updated: '+moment().format('MMMM DD YYYY HH:mm:ss'));
-
+    console.log(data);
   }
 
   function refreshView() {
@@ -188,5 +187,22 @@ $(document).ready(function() {
     performAnAction(action_offers);
     performAnAction(action_accountInfo);
   }
+
+  // https://www.kirupa.com/html5/removing_duplicate_items_from_an_array.htm
+  Array.prototype.removeDuplicates = function() {
+    var input = this;
+    var hashObject = new Object();
+
+    for (var i = input.length - 1; i >= 0; i--) {
+      var currentItem = input[i];
+
+      if (hashObject[currentItem] == true) {
+        input.splice(i, 1);
+      }
+      hashObject[currentItem] = true;
+    }
+    return input;
+  }
+
 
 })
